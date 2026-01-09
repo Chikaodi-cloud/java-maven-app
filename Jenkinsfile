@@ -1,38 +1,76 @@
-#!/usr/bin/env groovy
+// #!/usr/bin/env groovy
+// pipeline {
+//     agent any
+//     stages {
+//         stage("test"){
+//             steps {
+//                 script {
+//                     echo "Testing the application..."
+//                     echo "Excuting pipeline for branch $BRANCH_NAME"
+//                 }
+//             }
+//         }
+//         stage('build') {
+//             when {
+//                 expression{
+//                     BRANCH_NAME == 'main'
+//                 }
+//             }
+//             steps {
+//                 script {
+//                     echo "Building the application.."
+//                 }
+//             }
+//         }
+//         stage('deploy') {
+//             when {
+//                 expression{
+//                     BRANCH_NAME == 'main'
+//                 }
+//             }
+//             steps {
+//                 script {
+//                     echo "Deploying the application..."
+//                 }
+//             }
+//         }
+//     }
+// }
+
+
 pipeline {
     agent any
+
     stages {
-        stage("test"){
+        stage('Build') {
             steps {
-                script {
-                    echo "Testing the application..."
-                    echo "Excuting pipeline for branch $BRANCH_NAME"
-                }
+                echo 'Building...'
+                // Add build steps here
             }
         }
-        stage('build') {
-            when {
-                expression{
-                    BRANCH_NAME == 'main'
-                }
-            }
+        stage('Test') {
             steps {
-                script {
-                    echo "Building the application.."
-                }
+                echo 'Testing...'
+                // Add test steps here
             }
         }
-        stage('deploy') {
-            when {
-                expression{
-                    BRANCH_NAME == 'main'
-                }
-            }
+        stage('Deploy') {
             steps {
-                script {
-                    echo "Deploying the application..."
-                }
+                echo 'Deploying...'
+                // Add deploy steps here
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'This will always run after the pipeline completes.'
+        }
+        success {
+            echo 'This will run only if the pipeline succeeds.'
+        }
+        failure {
+            echo 'This will run only if the pipeline fails.'
         }
     }
 }
