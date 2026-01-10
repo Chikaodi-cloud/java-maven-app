@@ -1,57 +1,47 @@
-def gv
-
 pipeline {
-
     agent any
 
-    tools {
-        maven 'maven 3.9'
-    }
-
     stages {
-
-        stage("init") {
+        stage('Test') {
             steps {
-                script {
-                    gv = load "script.groovy"
-                }
+            script {
+                echo 'Testing the application...'
+                echo 'Executing application for $BRANCH_NAME'
+                // Add checkout steps here
             }
         }
-
-        stage("build jar") {
-            steps {
-                script {
-                    gv.buildJar()
+        stage('Build') {
+           when {
+                expression {
+                    BRANCH_NAME == 'main'
                 }
             }
-        }
-
-        stage("build image") {
             steps {
-                script {
-                    gv.buildImage()
-                }
+            script {
+                echo 'Building the application...'
+                // Add build steps here
             }
         }
-
-        stage("Deploy") {
-            steps {
-                script {
-                    gv.deployApp()
+        stage('Deploy') {
+            when {
+                expression {
+                    BRANCH_NAME == 'main'
                 }
+            }
+            steps {
+            script {
+                echo 'Deploying the application...'
+                // Add deploy steps here
             }
         }
     }
 
     post {
-        always {
-            echo 'This will always run after the pipeline completes.'
-        }
         success {
-            echo 'This will run only if the pipeline succeeds.'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'This will run only if the pipeline fails.'
+            echo 'Pipeline failed.'
         }
     }
 }
