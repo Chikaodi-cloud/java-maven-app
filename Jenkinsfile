@@ -1,43 +1,48 @@
-def gv 
+def gv
+
 pipeline {
 
     agent any
+
     tools {
         maven 'maven 3.9'
     }
-    
+
     stages {
-        stage("init)") {
-            steps {
-               script {
-                    gv = load "script.groovy"
-               }
-            }
-        }
-        stage("build jar") {
-            steps {
-               script {
-                    gv.buildJar()
-               }
-            }
-        }
-        stage("build image") {
+
+        stage("init") {
             steps {
                 script {
-                        gv.buildImage()
+                    gv = load "script.groovy"
                 }
             }
         }
-    
+
+        stage("build jar") {
+            steps {
+                script {
+                    gv.buildJar()
+                }
+            }
+        }
+
+        stage("build image") {
+            steps {
+                script {
+                    gv.buildImage()
+                }
+            }
+        }
+
         stage("Deploy") {
             steps {
                 script {
-                        gv.deployApp()
+                    gv.deployApp()
                 }
             }
         }
     }
-}
+
     post {
         always {
             echo 'This will always run after the pipeline completes.'
@@ -49,6 +54,8 @@ pipeline {
             echo 'This will run only if the pipeline fails.'
         }
     }
+}
+
 
 
 
