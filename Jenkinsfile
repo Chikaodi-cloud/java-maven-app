@@ -4,34 +4,39 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-            script {
-                echo 'Testing the application...'
-                echo 'Executing application for $BRANCH_NAME'
-                // Add checkout steps here
+                script {
+                    echo 'Testing the application...'
+                    echo "Executing application for ${env.BRANCH_NAME}"
+                    // Add checkout steps here
+                }
             }
         }
+
         stage('Build') {
-           when {
+            when {
                 expression {
-                    BRANCH_NAME == 'main'
+                    env.BRANCH_NAME == 'main'
                 }
             }
             steps {
-            script {
-                echo 'Building the application...'
-                // Add build steps here
+                script {
+                    echo 'Building the application...'
+                    // Add build steps here
+                }
             }
         }
+
         stage('Deploy') {
             when {
                 expression {
-                    BRANCH_NAME == 'main'
+                    env.BRANCH_NAME == 'main'
                 }
             }
             steps {
-            script {
-                echo 'Deploying the application...'
-                // Add deploy steps here
+                script {
+                    echo 'Deploying the application...'
+                    // Add deploy steps here
+                }
             }
         }
     }
@@ -45,6 +50,7 @@ pipeline {
         }
     }
 }
+
 
 
 
