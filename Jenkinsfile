@@ -1,49 +1,43 @@
+def gv 
 pipeline {
 
     agent any
-
     tools {
         maven 'maven 3.9'
     }
-
+    
     stages {
-
-        stage("Build JAR") {
+        stage("init)") {
+            steps {
+               script {
+                    gv = load "script.groovy"
+               }
+            }
+        }
+        stage("build jar") {
+            steps {
+               script {
+                    gv.buildJar()
+               }
+            }
+        }
+        stage("build image") {
             steps {
                 script {
-                    echo "Building the JAR file..."
-                    sh 'mvn clean package'
+                        gv.buildImage()
                 }
             }
         }
-
-        stage("Build Image") {
-            steps {
-                script {
-                    echo "Building Docker image..."
-
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'dockerHub-repo',
-                            usernameVariable: 'USER',
-                            passwordVariable: 'PASS'
-                        )
-                    ]) {
-                        sh 'docker build -t christianchika/my-demo-app:jma-2.0 .'
-                        sh 'echo $PASS | docker login -u $USER --password-stdin'
-                        sh 'docker push christianchika/my-demo-app:jma-2.0'
-                    }
-                }
-            }
-        }
-
+    
         stage("Deploy") {
             steps {
-                echo 'Deploying the application...'
+                script {
+                        gv.deployApp()
+                }
             }
         }
     }
-
+}
     post {
         always {
             echo 'This will always run after the pipeline completes.'
