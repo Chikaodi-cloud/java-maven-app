@@ -1,44 +1,49 @@
 pipeline {
 
     agent any
+
     tools {
         maven 'maven 3.9'
     }
-    
+
     stages {
-        stage("build jar") {
+
+        stage("Build JAR") {
             steps {
-               script {
+                script {
                     echo "Building the JAR file..."
-                    sh 'mvn package'
-               }
+                    sh 'mvn clean package'
+                }
             }
         }
-    
-        stage("build image") {
+
+        stage("Build Image") {
             steps {
-               script {
-                    echo "Building docker image..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerHub-repo', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                script {
+                    echo "Building Docker image..."
+
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerHub-repo',
+                            usernameVariable: 'USER',
+                            passwordVariable: 'PASS'
+                        )
+                    ]) {
                         sh 'docker build -t christianchika/my-demo-app:jma-2.0 .'
                         sh 'echo $PASS | docker login -u $USER --password-stdin'
                         sh 'docker push christianchika/my-demo-app:jma-2.0'
-                            
-                        
                     }
-   
-               }
+                }
             }
         }
-      
+
         stage("Deploy") {
             steps {
                 echo 'Deploying the application...'
-                
             }
         }
     }
-}
+
     post {
         always {
             echo 'This will always run after the pipeline completes.'
@@ -50,6 +55,8 @@ pipeline {
             echo 'This will run only if the pipeline fails.'
         }
     }
+}
+
 
 
 
