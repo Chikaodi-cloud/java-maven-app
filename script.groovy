@@ -1,14 +1,19 @@
-def buildApp() {
-    echo "Building the application..."
+def buildJar() {
+    echo "Building the JAR file..."
+    sh 'mvn clean package'
     // Add build logic here
 }
-def testApp() {
-    echo "Testing the application..."
-    // Add test logic here
+def buildImage() {
+    echo "Building docker image..."
+    withCredentials([usernamePassword(credentialsId: 'dockerHub-repo', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+      sh 'docker build -t christianchika/my-demo-app:jma-2.0 .'
+      sh 'echo $PASS | docker login -u $USER --password-stdin'
+      sh 'docker push christianchika/my-demo-app:jma-2.0'
+    // Add build logic here
+}
 }
 def deployApp() {
     echo 'Deploying the application...'
-    echo "Deploying version: ${params.VERSION}"
     // Add deploy logic here
 }
 
