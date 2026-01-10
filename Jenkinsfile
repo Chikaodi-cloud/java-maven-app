@@ -33,7 +33,7 @@ pipeline {
       
         stage("Deploy") {
             steps {
-                echo 'Deploying to Kubernetes cluster...'
+                echo 'Deploying the application...'
                 
             }
         }
